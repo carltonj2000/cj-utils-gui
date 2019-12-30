@@ -2,19 +2,50 @@
   "name": "cj-utils-gui",
   "version": "0.1.0",
   "private": true,
+  "description": "Carlton's Utilities GUI",
+  "author": {
+    "name": "Carlton Joseph",
+    "email": "carlton.joseph@gmail.com",
+    "url": "http://carltonjoseph.com"
+  },
+  "main": "public/electron.js",
+  "build": {
+    "appId": "com.carltonjoseph",
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "win": {
+      "icon": "build/icon.png"
+    },
+    "mac": {
+      "icon": "build/icon.icns",
+      "category": "public.app-category.productivity"
+    }
+  },
+  "homepage": "./",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "electron-is-dev": "^1.1.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-scripts": "3.3.0"
+    "react-scripts": "3.3.0",
+    "uuid": "^3.3.3",
+    "ws": "^7.2.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "react:start": "react-scripts start",
+    "react:build": "react-scripts build",
+    "react:test": "react-scripts test",
+    "react:eject": "react-scripts eject",
+    "electron:start": "electron .",
+    "electron:debug": "nodemon --watch ./public --exec \"electron . --debug\"",
+    "start": "concurrently \"cross-env BROWSER=none yarn react:start\" \"wait-on http://localhost:3000 && yarn electron:debug\"",
+    "start:nonm": "concurrently \"cross-env BROWSER=none yarn react:start\" \"wait-on http://localhost:3000 && yarn electron:start\"",
+    "electron:build:mac": "electron-builder --x64 --macos --c.extraMetadata.main=build/electron.js",
+    "build:mac": "yarn react:build && yarn electron:build:mac"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -30,5 +61,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.2",
+    "cross-env": "^6.0.3",
+    "electron": "^7.1.7",
+    "electron-builder": "^21.2.0",
+    "nodemon": "^2.0.2",
+    "wait-on": "^3.3.0"
   }
 }

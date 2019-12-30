@@ -1,25 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+
+import WsContext from "./WsContext";
+import useWs from "./useWs";
+
+import Photos from "./Photos";
 
 function App() {
+  const [req] = useWs();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <WsContext.Provider value={req}>
+      <div>
+        <h1>Carlton's Utilities</h1>
+        <Photos />
+      </div>
+    </WsContext.Provider>
   );
 }
 
