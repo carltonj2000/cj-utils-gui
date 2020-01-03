@@ -1,5 +1,6 @@
-const { dialog } = require("electron");
-const fs = require("fs");
+const { getFiles } = require("./getFiles");
+const { getDir } = require("./getDir");
+const { resetTestData } = require("./resetTestData");
 
 const handleMessage = (win, w) => dataIn => {
   // console.log(dataIn); // for debug
@@ -14,23 +15,13 @@ const handleMessage = (win, w) => dataIn => {
     case "pong":
       break;
     case "getDir":
-      dialog
-        .showOpenDialog(win, {
-          properties: ["openDirectory"]
-        })
-        .then(d =>
-          w.send(
-            JSON.stringify({
-              cmd: data.cmd,
-              id: data.id,
-              response: d
-            })
-          )
-        )
-        .catch(e => console.log("Dir access failed.", e));
+      getDir(win, w, data);
       break;
     case "getFiles":
-      console.log("getting files", data);
+      getFiles(w, data);
+      break;
+    case "resetTestData":
+      resetTestData(w, data);
       break;
     default:
       console.log("Warning! Unknown command:", cmd);
