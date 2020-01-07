@@ -5,7 +5,8 @@ import WsContext from "./WsContext";
 function Photos() {
   const req = React.useContext(WsContext);
   const [dir, dirSet] = React.useState("/Users/carltonjoseph/dogs");
-  const [files, filesSet] = React.useState([]);
+  // const [raws, rawsSet] = React.useState([]);
+  // const [jpegs, jpegsSet] = React.useState([]);
   const [status, statusSet] = React.useState("");
 
   const updateStatus = (msg, time = 2000) => {
@@ -13,19 +14,24 @@ function Photos() {
     setTimeout(() => statusSet(""), time);
   };
 
-  const handleSelectDirectory = async (getDir = true) => {
-    if (!req) return console.log("Error! ws connection down.");
-    try {
-      if (getDir) {
-        const r = await req("getDir");
-        dirSet(r.response.filePaths[0]);
+  const handleSelectDirectory = React.useCallback(
+    async (getDir = true) => {
+      if (!req) return console.log("Error! ws connection down.");
+      try {
+        if (getDir) {
+          const r = await req("getDir");
+          dirSet(r.response.filePaths[0]);
+        }
+        const fls = await req("getFiles", { dir });
+        const raw = fls.files.filter(file => /.*\.CR2$/gi.test(file.name));
+        //const jpg = fls.files.filter(file => /.*\.jpe?g$/gi.test(file.name));
+        raw.forEach(async r => await req("resizeFile", r));
+      } catch (e) {
+        console.log(e);
       }
-      const fls = await req("getFiles", [dir]);
-      console.log("fls", fls);
-    } catch (e) {
-      console.log("Error! Selecting dir:", e);
-    }
-  };
+    },
+    [req, dir]
+  );
 
   const handleProcessFiles = () => {
     console.log("processing");
@@ -38,7 +44,7 @@ function Photos() {
   };
   React.useEffect(() => {
     handleSelectDirectory(false);
-  }, [req]);
+  }, [req, handleSelectDirectory]);
 
   return (
     <div>

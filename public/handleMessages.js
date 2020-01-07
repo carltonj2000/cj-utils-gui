@@ -1,6 +1,7 @@
+const { resetTestData } = require("./resetTestData");
 const { getFiles } = require("./getFiles");
 const { getDir } = require("./getDir");
-const { resetTestData } = require("./resetTestData");
+const { resizeFiles } = require("./resizeFiles");
 
 const handleMessage = (win, w) => dataIn => {
   // console.log(dataIn); // for debug
@@ -25,6 +26,8 @@ const handleMessage = (win, w) => dataIn => {
       break;
     default:
       console.log("Warning! Unknown command:", cmd);
+      w.send(JSON.stringify({ ...data, sentCmd: data.cmd, cmd: "Error" }));
+      break;
   }
 };
 
