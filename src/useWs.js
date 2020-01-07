@@ -10,11 +10,12 @@ export default () => {
 
   React.useEffect(() => {
     const socket = new WebSocket("ws://127.0.0.1:1040");
-    wsSet(socket);
-    socket.onopen = () =>
+    socket.onopen = () => {
+      wsSet(socket);
       socket.send(
         JSON.stringify({ cmd: "pong", value: "Interface Up.", id: 2 })
       );
+    };
     socket.onmessage = wsEventSet;
   }, []);
 
@@ -40,23 +41,26 @@ export default () => {
     else req.resolve && req.resolve(data);
   }, [reqs, wsEvent]);
 
-  const req = (cmd, args = []) => {
-    let res;
-    let rej;
-    const p = new Promise((resolve, reject) => {
-      res = resolve;
-      rej = reject;
-    });
-    const id = uuid.v4();
-    const startTime = new Date().getTime();
-    const req = { [id]: { cmd, reject: rej, resolve: res, startTime } };
-    reqsSet(r => ({ ...r, ...req }));
-    if (!ws) {
-      const msg = "Warning. Websocket down." + cmd;
-      console.log(msg);
-      rej(msg);
-    } else ws.send(JSON.stringify({ cmd, id, args }));
-    return p;
-  };
+  const req = React.useCallback(
+    (cmd, args = []) => {
+      let res;
+      let rej;
+      const p = new Promise((resolve, reject) => {
+        res = resolve;
+        rej = reject;
+      });
+      const id = uuid.v4();
+      const startTime = new Date().getTime();
+      const req = { [id]: { cmd, reject: rej, resolve: res, startTime } };
+      reqsSet(r => ({ ...r, ...req }));
+      if (!ws) {
+        const msg = "Warning. Websocket down." + cmd;
+        console.log(msg);
+        rej(msg);
+      } else ws.send(JSON.stringify({ cmd, id, args }));
+      return p;
+    },
+    [ws]
+  );
   return [req];
 };

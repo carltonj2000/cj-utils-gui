@@ -4,7 +4,8 @@ import WsContext from "./WsContext";
 
 function Photos() {
   const req = React.useContext(WsContext);
-  const [dir, dirSet] = React.useState();
+  const [dir, dirSet] = React.useState("/Users/carltonjoseph/dogs");
+  const [files, filesSet] = React.useState([]);
   const [status, statusSet] = React.useState("");
 
   const updateStatus = (msg, time = 2000) => {
@@ -12,12 +13,22 @@ function Photos() {
     setTimeout(() => statusSet(""), time);
   };
 
-  const handleSelectDirectory = () => {
-    req && req("getDir").then(r => dirSet(r.response.filePaths[0]));
-  };
-  const handleProcessFiles = () => {
+  const handleSelectDirectory = async (getDir = true) => {
     if (!req) return console.log("Error! ws connection down.");
-    req("getFiles", [dir]).then(r => console.log(r));
+    try {
+      if (getDir) {
+        const r = await req("getDir");
+        dirSet(r.response.filePaths[0]);
+      }
+      const fls = await req("getFiles", [dir]);
+      console.log("fls", fls);
+    } catch (e) {
+      console.log("Error! Selecting dir:", e);
+    }
+  };
+
+  const handleProcessFiles = () => {
+    console.log("processing");
   };
   const handleResetData = () => {
     req &&
@@ -25,6 +36,10 @@ function Photos() {
         .then(r => updateStatus(r.value))
         .catch(r => updateStatus(r.value));
   };
+  React.useEffect(() => {
+    handleSelectDirectory(false);
+  }, [req]);
+
   return (
     <div>
       <h1>Photo Processing</h1>

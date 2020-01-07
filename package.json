@@ -37,12 +37,13 @@
   },
   "scripts": {
     "react:start": "react-scripts start",
+    "react:start:nb": "cross-env BROWSER=none yarn react:start",
     "react:build": "react-scripts build",
     "react:test": "react-scripts test",
     "react:eject": "react-scripts eject",
     "electron:start": "electron .",
     "electron:debug": "nodemon --watch ./public --exec \"electron . --debug\"",
-    "start": "concurrently \"cross-env BROWSER=none yarn react:start\" \"wait-on http://localhost:3000 && yarn electron:debug\"",
+    "start": "concurrently \"yarn react:start:nb\" \"wait-on http://localhost:3000 && yarn electron:debug\"",
     "start:nonm": "concurrently \"cross-env BROWSER=none yarn react:start\" \"wait-on http://localhost:3000 && yarn electron:start\"",
     "electron:build:mac": "electron-builder --x64 --macos --c.extraMetadata.main=build/electron.js",
     "build:mac": "yarn react:build && yarn electron:build:mac"

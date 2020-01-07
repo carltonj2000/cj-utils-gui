@@ -16,11 +16,16 @@ to work correctly.
 - https://www.libraw.org/
   - expects the `simple_dcraw` executable to be in `/usr/local/bin`.
 
-## Potential Issue And Errors
+## Potential Issues And Errors
 
 - `tbd error seen` - the 1040 port is used by another application
   or another instance of this program.
-  - solution is to stop the other program or instance
+  - **solution** is to stop the other program or instance
+- `Reading .../Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.2.1_0/manifest.json failed.`
+  - **solution** delete caches noted below
+    - Windows: C:\Users\<user>\AppData\Roaming\cj-utils-gui\Cache
+    - Linux: /home/<user>/.config/cj-utils-gui/Cache
+    - Mac: /Users/<user>/Library/Application Support/cj-utils-gui/Cache
 
 ## To Do
 

@@ -10,7 +10,6 @@ const devToolLinux = null; // tbd
 
 const getNewExt = devToolExtP => {
   const exts = fs.readdirSync(path.join(os.homedir(), devToolExtP));
-  if (exts.length === 1) return exts[0];
   exts.sort((a, b) => (a > b ? -1 : 1));
   return exts[0];
 };

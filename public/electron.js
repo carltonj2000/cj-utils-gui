@@ -4,8 +4,8 @@ const process = require("process");
 const isDev = require("electron-is-dev");
 const WebSocket = require("ws");
 
-const Hm = require("./handleMessages");
 const devToolExtDir = require("./devToolExtDir");
+const Hm = require("./handleMessages");
 
 let win;
 
@@ -74,7 +74,7 @@ function createWindow() {
     }
   });
 
-  if (isDev) setupDevTools(win);
+  if (isDev && devToolExtPath) setupDevTools(win);
 
   win.loadURL(url);
 
